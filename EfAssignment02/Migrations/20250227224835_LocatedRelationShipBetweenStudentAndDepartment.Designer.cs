@@ -4,6 +4,7 @@ using EfAssignment02.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EfAssignment02.Migrations
 {
     [DbContext(typeof(ITTDbContext))]
-    partial class ITTDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250227224835_LocatedRelationShipBetweenStudentAndDepartment")]
+    partial class LocatedRelationShipBetweenStudentAndDepartment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,12 +44,7 @@ namespace EfAssignment02.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TopicId")
-                        .HasColumnType("int");
-
                     b.HasKey("CourseId");
-
-                    b.HasIndex("TopicId");
 
                     b.ToTable("Courses");
                 });
@@ -62,37 +60,13 @@ namespace EfAssignment02.Migrations
                     b.Property<DateOnly>("HiringDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("ManegerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ManegerId")
-                        .IsUnique();
-
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("EfAssignment02.DbContexts.Models.Enrollment", b =>
-                {
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Grade")
-                        .HasColumnType("int");
-
-                    b.HasKey("CourseId", "StudentId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Enrollment");
                 });
 
             modelBuilder.Entity("EfAssignment02.DbContexts.Models.Instructor", b =>
@@ -110,9 +84,6 @@ namespace EfAssignment02.Migrations
                     b.Property<decimal>("Bouns")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("HoursRate")
                         .HasColumnType("int");
 
@@ -125,8 +96,6 @@ namespace EfAssignment02.Migrations
                         .HasColumnName("InstructorSalary");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Instructors");
                 });
@@ -164,24 +133,6 @@ namespace EfAssignment02.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("EfAssignment02.DbContexts.Models.Teach", b =>
-                {
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InstructorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Evaluate")
-                        .HasColumnType("int");
-
-                    b.HasKey("CourseId", "InstructorId");
-
-                    b.HasIndex("InstructorId");
-
-                    b.ToTable("Teach");
-                });
-
             modelBuilder.Entity("EfAssignment02.DbContexts.Models.Topic", b =>
                 {
                     b.Property<int>("Id")
@@ -199,52 +150,6 @@ namespace EfAssignment02.Migrations
                     b.ToTable("Topics");
                 });
 
-            modelBuilder.Entity("EfAssignment02.DbContexts.Models.Course", b =>
-                {
-                    b.HasOne("EfAssignment02.DbContexts.Models.Topic", "CourseTopic")
-                        .WithMany("Courses")
-                        .HasForeignKey("TopicId");
-
-                    b.Navigation("CourseTopic");
-                });
-
-            modelBuilder.Entity("EfAssignment02.DbContexts.Models.Department", b =>
-                {
-                    b.HasOne("EfAssignment02.DbContexts.Models.Instructor", "Maneger")
-                        .WithOne("ManegedDepartment")
-                        .HasForeignKey("EfAssignment02.DbContexts.Models.Department", "ManegerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Maneger");
-                });
-
-            modelBuilder.Entity("EfAssignment02.DbContexts.Models.Enrollment", b =>
-                {
-                    b.HasOne("EfAssignment02.DbContexts.Models.Course", null)
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EfAssignment02.DbContexts.Models.Student", null)
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("EfAssignment02.DbContexts.Models.Instructor", b =>
-                {
-                    b.HasOne("EfAssignment02.DbContexts.Models.Department", "InstructorDepartment")
-                        .WithMany("Instructors")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InstructorDepartment");
-                });
-
             modelBuilder.Entity("EfAssignment02.DbContexts.Models.Student", b =>
                 {
                     b.HasOne("EfAssignment02.DbContexts.Models.Department", "StudentDepartment")
@@ -256,36 +161,9 @@ namespace EfAssignment02.Migrations
                     b.Navigation("StudentDepartment");
                 });
 
-            modelBuilder.Entity("EfAssignment02.DbContexts.Models.Teach", b =>
-                {
-                    b.HasOne("EfAssignment02.DbContexts.Models.Course", null)
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EfAssignment02.DbContexts.Models.Instructor", null)
-                        .WithMany()
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("EfAssignment02.DbContexts.Models.Department", b =>
                 {
-                    b.Navigation("Instructors");
-
                     b.Navigation("Students");
-                });
-
-            modelBuilder.Entity("EfAssignment02.DbContexts.Models.Instructor", b =>
-                {
-                    b.Navigation("ManegedDepartment");
-                });
-
-            modelBuilder.Entity("EfAssignment02.DbContexts.Models.Topic", b =>
-                {
-                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }

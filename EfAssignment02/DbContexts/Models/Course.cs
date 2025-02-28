@@ -14,5 +14,9 @@ namespace EfAssignment02.DbContexts.Models
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
         public int Duration { get; set; }
+        public int TopicId { get; set; }
+        public Topic CourseTopic { get; set; } = null!;
+        public ICollection<Student> Students { get; set; }
+        public ICollection<Instructor> Instructors { get; set; }
     }
 }

@@ -16,6 +16,12 @@ namespace EfAssignment02.DbContexts.Models
         public decimal Salary { get; set; }
         public string Address { get; set; }
         public int HoursRate { get; set; }
+        public int DepartmentId { get; set; }
+        [InverseProperty(nameof(Department.Instructors))]
+        public Department InstructorDepartment { get; set; } = null!;
+        [InverseProperty(nameof(Department.Maneger))]
+        public Department? ManegedDepartment { get; set; }
+        public ICollection<Course> Courses { get; set; }
 
     }
 }

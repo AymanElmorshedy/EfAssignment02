@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace EfAssignment02.DbContexts.Models
 {
-    internal class Topic
+    internal class Teach
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public ICollection<Course> Courses { get; set; }
+        public int CourseId { get; set; }
+        public int InstructorId { get; set; }
+        public int Evaluate { get; set; }
     }
 }
